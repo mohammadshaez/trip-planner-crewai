@@ -89,7 +89,7 @@ trip_planner/
 Clone this repository and navigate to the project directory:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/mohammadshaez/trip-planner-crewai.git
 cd trip_planner
 ```
 
@@ -218,29 +218,6 @@ docker run -p 8000:8000 --env-file .env wanderlust-trip-planner
 ```
 
 Visit `http://localhost:8000`.
-
-### Deploy to Render.com (1-Click)
-1. Push your code to GitHub.
-2. In Render, select **New ➔ Web Service** and link your repo.
-3. Configure:
-   - **Root Directory**: `trip_planner`
-   - **Build Command**: `pip install -r requirements.txt && pip install -e .`
-   - **Start Command**: `uvicorn trip_planner.server:app --host 0.0.0.0 --port $PORT`
-4. Add your `MODEL` and `GEMINI_API_KEY` in **Environment Variables**.
-
-### Deploy to Railway.app
-1. Go to Railway ➔ **New Project ➔ Deploy from GitHub repo**.
-2. Set the root directory to `trip_planner`.
-3. Add `GEMINI_API_KEY` and `MODEL` in **Variables**. Railway will automatically detect the [Dockerfile](file:///Users/mohammedshaez/My%20Folder/Code/Temporary/AI/crew-ai/trip_planner/Dockerfile) and deploy.
-
-### Deploy to Google Cloud Run
-```bash
-gcloud run deploy trip-planner \
-  --source . \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars "MODEL=gemini/gemini-2.0-flash,GEMINI_API_KEY=your_key"
-```
 
 ---
 
