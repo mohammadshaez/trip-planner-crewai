@@ -23,6 +23,9 @@ ui = "trip_planner.server:serve"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/trip_planner"]
+
 [tool.crewai]
 type = "crew"
 project_id = "2c95a41b-2307-44ea-b391-e83b2a8bda08"

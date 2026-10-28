@@ -21,14 +21,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy dependency manifests first for optimal Docker layer caching
 COPY requirements.txt pyproject.toml ./
 
-# Install python packages
+# Install python dependencies first for optimal Docker layer caching
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -e .
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code and static assets
 COPY src/ ./src/
 COPY output/ ./output/
+
+# Install the project package now that src/ exists
+RUN pip install --no-cache-dir -e .
 
 # Ensure output directory exists and is writable
 RUN mkdir -p output
