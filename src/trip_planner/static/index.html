@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanderlust AI — Hierarchical Expedition & Trip Planner</title>
+  <meta name="description" content="AI-orchestrated hierarchical travel planning powered by CrewAI and Google Gemini.">
+  
+  <!-- Fonts: Newsreader (Editorial Serif) + Plus Jakarta Sans (UI Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Marked.js for fast, safe client-side Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-compass">🧭</span>
+        <div>
+          <h1 class="brand-title">Wanderlust AI</h1>
+          <span class="brand-tagline">Hierarchical CrewAI Expedition Architect</span>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator" id="systemStatusDot"></span>
+        <span class="status-text" id="systemStatusText">Connecting...</span>
+        <span class="status-badge" id="modelBadge">gemini-2.0-flash</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="app-layout">
+    <!-- Left Column: Expedition Configuration Drawer -->
+    <aside class="planner-panel">
+      <div class="panel-card">
+        <div class="card-header">
+          <h2 class="card-title">Expedition Brief</h2>
+          <p class="card-desc">Configure target parameters for your multi-agent travel team.</p>
+        </div>
+
+        <!-- Quick Preset Pills -->
+        <div class="presets-section">
+          <span class="section-label">Popular Expeditions:</span>
+          <div class="preset-pills">
+            <button type="button" class="preset-pill active" data-dest="Kyoto, Japan" data-days="5" data-budget="mid" data-interests="food-focused cultural exploration, authentic tea houses, and historic temples">Kyoto (5d)</button>
+            <button type="button" class="preset-pill" data-dest="Reykjavik, Iceland" data-days="4" data-budget="mid" data-interests="hot springs, northern lights chasing, glacial hikes, and geothermal bakeries">Iceland (4d)</button>
+            <button type="button" class="preset-pill" data-dest="Rome & Amalfi Coast, Italy" data-days="7" data-budget="high" data-interests="art history, artisan pasta making, panoramic coastal trails, and boutique stays">Italy (7d)</button>
+          </div>
+        </div>
+
+        <form id="planForm" class="plan-form">
+          <!-- Destination Field -->
+          <div class="form-group">
+            <label for="destinationInput" class="form-label">Destination</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📍</span>
+              <input type="text" id="destinationInput" name="destination" class="form-input" placeholder="e.g. Kyoto, Japan or Amalfi Coast" value="Kyoto, Japan" required>
+            </div>
+          </div>
+
+          <!-- Number of Days & Stepper -->
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="daysInput" class="form-label">Duration (Days)</label>
+              <div class="stepper-wrapper">
+                <button type="button" class="stepper-btn" id="decrementDays" aria-label="Decrease days">−</button>
+                <input type="number" id="daysInput" name="days" class="stepper-input" min="1" max="30" value="5" required>
+                <button type="button" class="stepper-btn" id="incrementDays" aria-label="Increase days">+</button>
+              </div>
+            </div>
+
+            <!-- Budget Tier Selector -->
+            <div class="form-group flex-1">
+              <label class="form-label">Budget Tier</label>
+              <div class="budget-toggle">
+                <label class="budget-option">
+                  <input type="radio" name="budgetTier" value="low">
+                  <span>Low</span>
+                </label>
+                <label class="budget-option">
+                  <input type="radio" name="budgetTier" value="mid" checked>
+                  <span>Mid</span>
+                </label>
+                <label class="budget-option">
+                  <input type="radio" name="budgetTier" value="high">
+                  <span>Luxury</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traveler Interests -->
+          <div class="form-group">
+            <label for="interestsInput" class="form-label">Specialist Focus & Interests</label>
+            <textarea id="interestsInput" name="interests" class="form-textarea" rows="3" placeholder="Describe culinary preferences, pace, cultural landmarks, walking appetite..." required>food-focused cultural exploration, authentic tea houses, and historic temples</textarea>
+          </div>
+
+          <!-- Submit Action Button -->
+          <button type="submit" id="submitBtn" class="btn-primary">
+            <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+            <span class="btn-label" id="btnLabel">Kickoff Multi-Agent Crew</span>
+          </button>
+        </form>
+
+        <!-- Crew Roles Mini-Card -->
+        <div class="crew-roster">
+          <span class="roster-title">Assigned Crew Specialists:</span>
+          <div class="roster-grid">
+            <div class="roster-item">
+              <span class="roster-icon">🏛️</span>
+              <div class="roster-details">
+                <strong>Destination Specialist</strong>
+                <span>Local gems & customs</span>
+              </div>
+            </div>
+            <div class="roster-item">
+              <span class="roster-icon">🗺️</span>
+              <div class="roster-details">
+                <strong>Itinerary Architect</strong>
+                <span>Route clustering & timing</span>
+              </div>
+            </div>
+            <div class="roster-item">
+              <span class="roster-icon">📊</span>
+              <div class="roster-details">
+                <strong>Financial Analyst</strong>
+                <span>Itemized cost models</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Column: Live Progress & Dossier Viewer -->
+    <section class="dossier-panel">
+      <!-- Live Progress Bar (Revealed during execution) -->
+      <div id="progressCard" class="progress-card hidden">
+        <div class="progress-header">
+          <div class="pulse-indicator"></div>
+          <div>
+            <h3 class="progress-title" id="progressTitle">Multi-Agent Planning in Progress</h3>
+            <p class="progress-subtitle" id="progressSubtitle">Hierarchical Manager is coordinating destination research and financial modeling...</p>
+          </div>
+        </div>
+        <div class="pipeline-track">
+          <div class="pipeline-step active" id="step1">
+            <span class="step-num">1</span>
+            <span class="step-name">Research</span>
+          </div>
+          <div class="pipeline-connector active"></div>
+          <div class="pipeline-step active" id="step2">
+            <span class="step-num">2</span>
+            <span class="step-name">Itinerary</span>
+          </div>
+          <div class="pipeline-connector active"></div>
+          <div class="pipeline-step active" id="step3">
+            <span class="step-num">3</span>
+            <span class="step-name">Budget Dossier</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dossier Display Card -->
+      <div class="dossier-card">
+        <div class="dossier-toolbar">
+          <div class="toolbar-meta">
+            <span class="dossier-tag">Trip Dossier</span>
+            <span class="dossier-updated" id="dossierUpdated">Loading saved plan...</span>
+          </div>
+          <div class="toolbar-actions">
+            <button type="button" id="copyMarkdownBtn" class="btn-secondary" title="Copy raw Markdown to clipboard">
+              <span>📋</span> Copy
+            </button>
+            <button type="button" id="downloadMarkdownBtn" class="btn-secondary" title="Download dossier as markdown">
+              <span>📥</span> Download
+            </button>
+            <button type="button" id="printBtn" class="btn-secondary" title="Print or save as PDF">
+              <span>🖨️</span> Print
+            </button>
+          </div>
+        </div>
+
+        <!-- Rendered Dossier Output -->
+        <article id="dossierContent" class="markdown-body">
+          <div class="empty-state">
+            <span class="empty-icon">🗺️</span>
+            <h3>No Trip Dossier Yet</h3>
+            <p>Select your destination and click "Kickoff Multi-Agent Crew" to generate an itemized travel blueprint.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

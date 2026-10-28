@@ -1,0 +1,77 @@
+# ==============================================================================
+# Task Configurations for Trip Planner Crew
+# Under Process.hierarchical, the Manager Agent oversees each task, coordinates
+# with the appropriate specialist agent, and reviews their submissions before
+# proceeding to ensure flawless cross-task consistency.
+# ==============================================================================
+
+# Task 1: Comprehensive Destination Research
+research_destination_task:
+  description: >
+    Conduct exhaustive destination research for a {number_of_days}-day trip to {destination}
+    focusing on the traveler's interests: "{interests}".
+    
+    Your research must cover:
+    1. Top must-visit attractions, cultural sites, and hidden gems relevant to {interests}.
+    2. Local food scene: signature regional dishes, iconic local eateries, street food markets,
+       and dining etiquette.
+    3. Recommended neighborhoods to explore and base accommodations in.
+    4. Best time to visit, weather considerations, and seasonal highlights for {destination}.
+    5. Practical & logistical tips: public transit navigation, airport transfers, safety,
+       payment norms (cash vs. card), and local customs.
+  expected_output: >
+    A comprehensive, beautifully formatted Markdown research dossier on {destination} divided into
+    clear sections: Highlights & Hidden Gems, Neighborhood Breakdown, Food & Culinary Scene,
+    Seasonal & Weather Guidance, and Practical Logistics & Safety Tips.
+  agent: destination_researcher
+
+# Task 2: Optimized Day-by-Day Itinerary Planning
+plan_itinerary_task:
+  description: >
+    Using the detailed destination research, build an optimized, realistic day-by-day itinerary
+    for {number_of_days} days in {destination} that specifically emphasizes "{interests}".
+    
+    Structure each day into three distinct time blocks:
+    - Morning (09:00 - 12:30): Primary attraction or cultural experience.
+    - Afternoon (12:30 - 17:30): Lunch spot recommendation followed by secondary activities or exploration.
+    - Evening (17:30 onwards): Dinner recommendation, sunset viewpoints, or evening entertainment.
+    
+    Crucial Logistics Guidelines:
+    - Group activities by geographical proximity each day to eliminate unnecessary commuting.
+    - Explicitly state estimated transit times and suggested transport modes between stops.
+    - Ensure a realistic human pace: avoid scheduling more than 2-3 major activities per day.
+    - Include specific lunch and dinner suggestions highlighting local cuisine.
+  expected_output: >
+    A complete Day 1 through Day {number_of_days} itinerary in clean Markdown. Each day must feature
+    theme/focus, time-blocked activities (Morning, Afternoon, Evening), specific venue names,
+    transit notes between stops, and culinary recommendations.
+  agent: itinerary_planner
+
+# Task 3: Itemized Budget Estimation & Final Trip Dossier
+estimate_budget_task:
+  description: >
+    Develop a detailed financial cost breakdown and final trip dossier for a {number_of_days}-day stay
+    in {destination} tailored to the "{budget_tier}" budget tier.
+    
+    Incorporate the planned activities, accommodation neighborhoods, and dining styles from prior tasks.
+    
+    Provide realistic cost estimates for:
+    1. Flights / Inbound Transit: Average round-trip flight estimate based on standard departure hubs.
+    2. Lodging: Nightly rate and total for {number_of_days} nights suited to the {budget_tier} tier
+       (e.g., hostels/guesthouses for low, boutique 3-4 star hotels for mid, 5-star/resorts for high).
+    3. Food & Dining: Daily allowance and total for breakfast, lunch, dinner, coffee, and snacks.
+    4. Activities & Attractions: Entry tickets, tours, and museum passes planned in the itinerary.
+    5. Local Transportation: Metro passes, taxis/rideshares, bike rentals, or regional trains.
+    6. Contingency / Miscellaneous: 10-15% buffer for emergency expenses or shopping.
+    
+    Format requirements:
+    - Present the complete budget breakdown in a clear Markdown table with Category, Daily Average ($),
+      Total Cost ($ USD), and Notes/Assumptions.
+    - Provide 4-6 high-impact, actionable money-saving tips specific to {destination} and the {budget_tier} tier.
+    - Conclude with an Executive Summary integrating the trip highlights, key dates, budget total, and top advice.
+  expected_output: >
+    A comprehensive budget and final trip document containing:
+    1. An itemized Markdown budget table with line-item estimates and calculated Grand Total in USD.
+    2. Specific cost-saving tips tailored to {destination} and the {budget_tier} budget tier.
+    3. An executive summary pulling together the trip itinerary highlights, budget total, and essential packing/travel tips.
+  agent: budget_estimator

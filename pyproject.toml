@@ -1,0 +1,28 @@
+[project]
+name = "trip_planner"
+version = "0.1.0"
+description = "Hierarchical multi-agent trip planner using CrewAI"
+authors = [{ name = "Trip Planner Team", email = "trip_planner@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[google-genai,tools]>=1.15.30,<2.0.0",
+    "fastapi>=0.110.0",
+    "python-dotenv>=1.0.0",
+    "uvicorn[standard]>=0.28.0",
+]
+
+[project.scripts]
+trip_planner = "trip_planner.main:run"
+run_crew = "trip_planner.main:run"
+train = "trip_planner.main:train"
+replay = "trip_planner.main:replay"
+test = "trip_planner.main:test"
+ui = "trip_planner.server:serve"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
+project_id = "2c95a41b-2307-44ea-b391-e83b2a8bda08"
